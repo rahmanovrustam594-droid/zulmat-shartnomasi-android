@@ -1,36 +1,35 @@
-# This is a basic workflow to help you get started with Actions
+name: Godot Android Export
 
-name: CI
-
-# Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch
   push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+    branches: [ main, master ]
 
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
-
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
   build:
-    # The type of runner that the job will run on
+    name: Build Godot APK
     runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
+    
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v4
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
 
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
-
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
+      - name: Setup Debug Keystore
         run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+          keytool -keyalg RSA -genkeyalg RSA -keysize 2048 -validity 10000 -keypass android -keystore debug.keystore -storepass android -dname "CN=Android Debug,O=Android,C=US" -alias androiddebugkey
+
+      - name: Export Game to APK
+        uses: abarichello/godot-actions@v3
+        with:
+          godot: 4.3
+          name: zulmat-shartnomasi
+          android: true
+          # Agar loyihangiz papka ichida bo'lmasa, pastdagi qatorni olib tashlashingiz mumkin
+          # working-directory: . 
+
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: zulmat-shartnomasi-apk
+          path: /home/runner/work/zulmat-shartnomasi-android/zulmat-shartnomasi-android/build/android/
