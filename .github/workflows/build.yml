@@ -3,20 +3,35 @@ name: Godot Android Export
 on:
   push:
     branches: [ main, master ]
+  workflow_dispatch:
 
 jobs:
   build:
     name: Build Godot APK
     runs-on: ubuntu-latest
-    
+
     steps:
-      - name: Checkout Code
+      - name: Checkout code
         uses: actions/checkout@v4
         with:
           submodules: recursive
 
-      - name: Export APK
-        uses: firebelley/godot-export@v5.1.0
+      - name: Set up Java
+        uses: actions/setup-java@v4
         with:
-          godot_v: 4.3.0
-          android: true
+          distribution: temurin
+          java-version: '17'
+
+      - name: Load Godot and Export
+        uses: firebelley/godot-export@v6.0.0
+        with:
+          godot-version: 4.3
+          godot-export-preset: Android
+          create-release: false
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-apk
+          path: build/android/*.apk
+          if-no-files-found: error
