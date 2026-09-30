@@ -5,19 +5,23 @@ on:
     branches: [ main, master ]
 
 jobs:
-  build:
+sh:
     name: Build Godot APK
     runs-on: ubuntu-latest
     
     steps:
-      - name: Checkout Code
+      - name: Checkout code
         uses: actions/checkout@v4
         with:
           submodules: recursive
 
-      - name: Compile Game to APK
-        uses: firebelley/godot-export@v6.0.0
+      - name: Setup Godot
+        uses: abarba/godot-action@v3.2
         with:
-          godot-version: 4.3
-          godot-export-preset: Android
-          create-release: false
+          version: 4.3.0
+          use-template: true
+
+      - name: Export to Android
+        run: |
+          mkdir -p build/android
+          godot --headless --export-release "Android" build/android/game.apk
