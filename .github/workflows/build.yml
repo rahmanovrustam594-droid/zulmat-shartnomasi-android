@@ -5,7 +5,7 @@ on:
     branches: [ main, master ]
 
 jobs:
-sh:
+  build:
     name: Build Godot APK
     runs-on: ubuntu-latest
     
