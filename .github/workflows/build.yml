@@ -16,7 +16,8 @@ jobs:
           submodules: recursive
 
       - name: Compile Game to APK
-        uses: firebelley/godot-export@v5.2.0
+        uses: firebelley/godot-export@v6.0.0
         with:
-          godot_v: 4.3.0-stable
-          android: true
+          godot-version: 4.3
+          godot-export-preset: Android
+          create-release: false
