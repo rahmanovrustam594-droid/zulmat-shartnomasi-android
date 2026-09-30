@@ -15,21 +15,8 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Setup Debug Keystore
-        run: |
-          keytool -keyalg RSA -genkeyalg RSA -keysize 2048 -validity 10000 -keypass android -keystore debug.keystore -storepass android -dname "CN=Android Debug,O=Android,C=US" -alias androiddebugkey
-
-      - name: Export Game to APK
-        uses: abarichello/godot-actions@v3
+      - name: Compile Game to APK
+        uses: firebelley/godot-export@v5.2.0
         with:
-          godot: 4.3
-          name: zulmat-shartnomasi
+          godot_v: 4.3.0-stable
           android: true
-          # Agar loyihangiz papka ichida bo'lmasa, pastdagi qatorni olib tashlashingiz mumkin
-          # working-directory: . 
-
-      - name: Upload APK Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: zulmat-shartnomasi-apk
-          path: /home/runner/work/zulmat-shartnomasi-android/zulmat-shartnomasi-android/build/android/
